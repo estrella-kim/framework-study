@@ -14,20 +14,26 @@
     (function () {
         (function () {
             var syncNext = {
-                _asyncCount: 0,
-                _next: [],
-                _haveChild : 0,
-                add: function (pFunc) {
+                _asyncCount: 0, // 동시에 수행되어야하는(비동기적으로) 몇 개 남았는지 보여주는 변수
+                _next: [], //살행되어야하는 함수가 쌓이는 배열
+                _isChild : 0,
+                add: function (pFunc, childNum) {//함수배열에 넣어주는 함수
                     this._next.push(pFunc);
+                    if(childNum + 1){
+                        this.addChild(childNum);
+                    } //
                 },
-                next: function (pAsyncFlag) {
-                    if (!pAsyncFlag && this._asyncCount > 0) {
+                addChild : function(childNum){ //자식함수가 몇 개 실행되어야하는지 보여주는 함수
+                    this._next.splice(childNum, 0, this._next.pop());
+                },
+                next: function (pAsyncFlag) { // 조건을 탐색해서 함수를 꺼내 실행해주는 함수
+                    if (!pAsyncFlag && this._asyncCount > 0) { //만약 리턴값이 트루지만 동시에 해야하는 작업이 실행되었다면 개수를 줄인다.
                         --this._asyncCount;
-                    } else if (pAsyncFlag || (!pAsyncFlag && this._asyncCount === 0)) {
-                        if (this._next.length) {
+                    } else if (pAsyncFlag || (!pAsyncFlag && this._asyncCount === 0)) { // 만약 리턴값이 트루고 다음 실행작업이 없을 때는
+                        if (this._next.length) {  // 실행작업들이 있을 때
                             var async = this._next.shift()();
 
-                            if (async) {
+                            if (async) { // return 값이 트루라면 다음 동시진행할 작업을 실행하고, 진행할 작업개수가 하나 늘어난다. async count는 0 일 때 동기적으로 다음 단위의 작업을 처리해주는 역할 .
                                 ++this._asyncCount;
                                 this.next(true);
                             }
@@ -37,7 +43,7 @@
             };
 
             syncNext.add(function () {
-                setTimeout(function () {
+                setTimeout(function () { // 언제 실행이 될 지 모를 때 기다리지 않고 다른 작업을 수행하게 만드는 비동기 테스트를 위해 setTImeout으로 브라우저에게 위임한다.
                     console.log("1", syncNext._asyncCount);
                     syncNext.next();
                 }, 1000);
@@ -59,14 +65,14 @@
                     console.log("3", syncNext._asyncCount);
                     syncNext.next();
                 }, 1000);
-            });
+            });  // return 값이 true가 아니면 다음 작업단위는 동기적으로 실행이 된다.
 
             syncNext.add(function () {
                 setTimeout(function () {
                     console.log("내가 먼저", syncNext._asyncCount);
 
                     syncNext.add(function () {
-                        setTimeout(function () {
+                        setTimeout(function () { // 내 자식이 먼저
                             console.log("내 자식이 먼저", syncNext._asyncCount);
 
                             syncNext.add(function () {
@@ -75,19 +81,13 @@
                                     syncNext.next();
 
                                 }, 1000);
-                                return true;
-                            });
-
-                            syncNext.addChild(  );
-
-                            syncNext._next.splice(0, 0, syncNext._next.pop());
+                                return true; // 다음 실행될 함수와 동시에 실행된다.
+                            }, syncNext._isChild); // 부모함수 안에 존재ㅎ면 child값을인자로 넘긴다.
 
                             syncNext.next();
 
                         }, 1000);
-                    });
-
-                    syncNext._next.splice(0, 0, syncNext._next.pop());
+                    }, syncNext._isChild);
 
                     syncNext.add(function () {
                         setTimeout(function () {
@@ -95,9 +95,8 @@
                             syncNext.next();
                         }, 1000);
 
-                    });
+                    }, syncNext._isChild + 1); // 만약 부모함수 내에 형제함수가 있으면 child값에 그전 형제함수의 개수를 더하여 인자로 넘긴다.
 
-                    syncNext._next.splice(1, 0, syncNext._next.pop());
                     syncNext.next();
 
                 }, 1000);
@@ -109,7 +108,7 @@
                 setTimeout(function () {
                     console.log("나는 나중", syncNext._asyncCount);
                     syncNext.next();
-                }, 999);
+                }, 999); // 언제 실행될지 모르니 time parameter는 랜덤하다.
             });
 
             syncNext.add(function () {
@@ -170,7 +169,7 @@
                 }, 300);
             });
 
-            syncNext.next();
+            //syncNext.next();
         })();
     })();
 </script>
