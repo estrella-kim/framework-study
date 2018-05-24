@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="format-detection" content="telephone=no">
+    <title>React</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+
+<body>
+<script>
+    (function () {
+        (function () {
+            var syncNext = {
+                _asyncCount: 0,
+                _next: [],
+                _haveChild : 0,
+                add: function (pFunc) {
+                    this._next.push(pFunc);
+                },
+                next: function (pAsyncFlag) {
+                    if (!pAsyncFlag && this._asyncCount > 0) {
+                        --this._asyncCount;
+                    } else if (pAsyncFlag || (!pAsyncFlag && this._asyncCount === 0)) {
+                        if (this._next.length) {
+                            var async = this._next.shift()();
+
+                            if (async) {
+                                ++this._asyncCount;
+                                this.next(true);
+                            }
+                        }
+                    }
+                }
+            };
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("1", syncNext._asyncCount);
+                    syncNext.next();
+                }, 1000);
+
+                return true;
+            });
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("2", syncNext._asyncCount);
+                    syncNext.next();
+                }, 1000);
+
+                return true;
+            });
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("3", syncNext._asyncCount);
+                    syncNext.next();
+                }, 1000);
+            });
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("내가 먼저", syncNext._asyncCount);
+
+                    syncNext.add(function () {
+                        setTimeout(function () {
+                            console.log("내 자식이 먼저", syncNext._asyncCount);
+
+                            syncNext.add(function () {
+                                setTimeout(function () {
+                                    console.log("내 손자가 먼저", syncNext._asyncCount);
+                                    syncNext.next();
+
+                                }, 1000);
+                                return true;
+                            });
+
+                            syncNext.addChild(  );
+
+                            syncNext._next.splice(0, 0, syncNext._next.pop());
+
+                            syncNext.next();
+
+                        }, 1000);
+                    });
+
+                    syncNext._next.splice(0, 0, syncNext._next.pop());
+
+                    syncNext.add(function () {
+                        setTimeout(function () {
+                            console.log("내 자식의 두번째", syncNext._asyncCount);
+                            syncNext.next();
+                        }, 1000);
+
+                    });
+
+                    syncNext._next.splice(1, 0, syncNext._next.pop());
+                    syncNext.next();
+
+                }, 1000);
+
+                return true;
+            });
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("나는 나중", syncNext._asyncCount);
+                    syncNext.next();
+                }, 999);
+            });
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("나는 끝", syncNext._asyncCount);
+                    syncNext.next();
+                }, 300);
+            });
+
+            syncNext.next();
+        })();
+
+        return;
+
+        (function () { //숙제, 비동기를 동기화 할 경우 비동기 내의 비동기는 종속 되어 선 처리 된 후에 나머지 비동기가 처리
+            var syncNext = {
+                _next: [],
+                add: function (pFunc) {
+                    this._next.push(pFunc);
+                },
+                next: function () {
+                    this._next.length && (this._next.shift()());
+                }
+            };
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("내가 먼저");
+                    syncNext.add(function () {
+                        setTimeout(function () {
+                            console.log("내 자식이 먼저");
+                            syncNext.next();
+                        }, 1000);
+                    });
+
+                    syncNext.add(function () {
+                        setTimeout(function () {
+                            console.log("내 자식의 두번째");
+                            syncNext.next();
+                        }, 1000);
+                    });
+
+                    syncNext.next();
+                }, 1000);
+            });
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("나는 나중");
+                    syncNext.next();
+                }, 500);
+            });
+
+            syncNext.add(function () {
+                setTimeout(function () {
+                    console.log("나는 끝");
+                    syncNext.next();
+                }, 300);
+            });
+
+            syncNext.next();
+        })();
+    })();
+</script>
+</body>
+
+</html>
