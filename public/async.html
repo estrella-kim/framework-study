@@ -11,41 +11,19 @@
 
 <body>
 <script>
-    (function () {
         (function () {
 
-            function Sync() {
-                this._asyncCount = 0;
-                this._next = [];
-                this.add = function(pFunc) {
+            class Sync {
+                constructor() {
+                    this._asyncCount = 0;
+                    this._next = [];
+                }
+
+                add(pFunc) {
                     this._next.push(pFunc);
                 };
-                this.next = function (pAsyncFlag) { // 조건을 탐색해서 함수를 꺼내 실행해주는 함수
-                    if (!pAsyncFlag && this._asyncCount > 0) { //만약 리턴값이 트루지만 동시에 해야하는 작업이 실행되었다면 개수를 줄인다.
-                        --this._asyncCount;
-                    } else if (pAsyncFlag || (!pAsyncFlag && this._asyncCount === 0)) { // 만약 리턴값이 트루고 다음 실행작업이 없을 때는
-                        if (this._next.length) {  // 실행작업들이 있을 때
-                            var async = this._next.shift()();
 
-                            if (async) { // return 값이 트루라면 다음 동시진행할 작업을 실행하고, 진행할 작업개수가 하나 늘어난다. async count는 0 일 때 동기적으로 다음 단위의 작업을 처리해주는 역할 .
-                                ++this._asyncCount;
-                                this.next(true);
-                            }
-                        }
-                    }
-                };
-            };
-
-            var syncNext = new Sync();
-
-
-            /*var syncNext = {
-                _asyncCount: 0, // 동시에 수행되어야하는(비동기적으로) 몇 개 남았는지 보여주는 변수
-                _next: [], //살행되어야하는 함수가 쌓이는 배열
-                add: function (pFunc) {//함수배열에 넣어주는 함수
-                    this._next.push(pFunc);
-                },
-                next: function (pAsyncFlag) { // 조건을 탐색해서 함수를 꺼내 실행해주는 함수
+                next(pAsyncFlag) { // 조건을 탐색해서 함수를 꺼내 실행해주는 함수
                     if (!pAsyncFlag && this._asyncCount > 0) { //만약 리턴값이 트루지만 동시에 해야하는 작업이 실행되었다면 개수를 줄인다.
                         --this._asyncCount;
                     } else if (pAsyncFlag || (!pAsyncFlag && this._asyncCount === 0)) { // 만약 리턴값이 트루고 다음 실행작업이 없을 때는
@@ -59,7 +37,9 @@
                         }
                     }
                 }
-            };*/
+            }
+
+            const syncNext = new Sync();
 
             syncNext.add(function () {
                 setTimeout(function () { // 언제 실행이 될 지 모를 때 기다리지 않고 다른 작업을 수행하게 만드는 비동기 테스트를 위해 setTImeout으로 브라우저에게 위임한다.
@@ -175,58 +155,6 @@
 
             syncNext.next();
         })();
-
-        return;
-
-        (function () { //숙제, 비동기를 동기화 할 경우 비동기 내의 비동기는 종속 되어 선 처리 된 후에 나머지 비동기가 처리
-            var syncNext = {
-                _next: [],
-                add: function (pFunc) {
-                    this._next.push(pFunc);
-                },
-                next: function () {
-                    this._next.length && (this._next.shift()());
-                }
-            };
-
-            syncNext.add(function () {
-                setTimeout(function () {
-                    console.log("내가 먼저");
-                    syncNext.add(function () {
-                        setTimeout(function () {
-                            console.log("내 자식이 먼저");
-                            syncNext.next();
-                        }, 1000);
-                    });
-
-                    syncNext.add(function () {
-                        setTimeout(function () {
-                            console.log("내 자식의 두번째");
-                            syncNext.next();
-                        }, 1000);
-                    });
-
-                    syncNext.next();
-                }, 1000);
-            });
-
-            syncNext.add(function () {
-                setTimeout(function () {
-                    console.log("나는 나중");
-                    syncNext.next();
-                }, 500);
-            });
-
-            syncNext.add(function () {
-                setTimeout(function () {
-                    console.log("나는 끝");
-                    syncNext.next();
-                }, 300);
-            });
-
-            //syncNext.next();
-        })();
-    })();
 </script>
 </body>
 
