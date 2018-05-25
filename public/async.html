@@ -91,7 +91,7 @@
                     console.log("내가 먼저", syncNext._asyncCount);
 
                     var childSync = new Sync();
-                    console.log(childSync)
+
                     childSync.add(function () {
                         setTimeout(function () { // 내 자식이 먼저
                             console.log("내 자식이 먼저", syncNext._asyncCount);
@@ -109,6 +109,8 @@
                             grandChidSync.next();
 
                         }, 1000);
+
+                        return true;
                     });
 
                     childSync.add(function () {
@@ -129,8 +131,39 @@
             syncNext.add(function () {
                 setTimeout(function () {
                     console.log("나는 나중", syncNext._asyncCount);
-                    syncNext.next();
-                }, 999); // 언제 실행될지 모르니 time parameter는 랜덤하다.
+
+                    var childSync = new Sync();
+
+                    childSync.add(function () {
+                        setTimeout(function () { // 내 자식이 먼저
+                            console.log("나중 자식이 먼저", syncNext._asyncCount);
+
+                            var grandChidSync = new Sync();
+
+                            grandChidSync.add(function () {
+                                setTimeout(function () {
+                                    console.log("나중 손자가 먼저", syncNext._asyncCount);
+                                    syncNext.next();
+
+                                }, 1000);
+                                return true; // 다음 실행될 함수와 동시에 실행된다.
+                            }); // 부모함수 안에 존재ㅎ면 child값을인자로 넘긴다.
+
+                            grandChidSync.next();
+
+                        }, 1000);
+
+                        return true;
+                    });
+
+                    childSync.add(function () {
+                        setTimeout(function () { // 내 자식이 먼저
+                            console.log("나중 자식이 두번째", syncNext._asyncCount);
+                        }, 1000);
+                    });
+
+                    childSync.next();
+                }, 900); // 언제 실행될지 모르니 time parameter는 랜덤하다.
             });
 
             syncNext.add(function () {
