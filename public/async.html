@@ -12,7 +12,7 @@
 <body>
 <script>
         (function () {
-
+            // 동기/비동기를 제어할 수 있는 클래스를 만든다.
             class Sync {
                 constructor() {
                     this._asyncCount = 0;
@@ -39,7 +39,7 @@
                 }
             }
 
-            const syncNext = new Sync();
+            const syncNext = new Sync(); //한 상수가 클래스를 상속받아 클래스 안의 속성을 사용할 수 있게 된다.
 
             syncNext.add(function () {
                 setTimeout(function () { // 언제 실행이 될 지 모를 때 기다리지 않고 다른 작업을 수행하게 만드는 비동기 테스트를 위해 setTImeout으로 브라우저에게 위임한다.
@@ -70,7 +70,7 @@
                 setTimeout(function () {
                     console.log("내가 먼저", syncNext._asyncCount);
 
-                    var childSync = new Sync();
+                    const childSync = new Sync(); //새로운 상수가 클래스를 상속받아 클래스 안의 속성을 사용할 수 있게 된다.
 
                     childSync.add(function () {
                         setTimeout(function () { // 내 자식이 먼저
@@ -84,7 +84,7 @@
 
                                 }, 1000);
                                 return true; // 다음 실행될 함수와 동시에 실행된다.
-                            }); // 부모함수 안에 존재ㅎ면 child값을인자로 넘긴다.
+                            });
 
                             grandChidSync.next();
 
@@ -99,7 +99,7 @@
                             syncNext.next();
                         }, 1000);
 
-                    }); // 만약 부모함수 내에 형제함수가 있으면 child값에 그전 형제함수의 개수를 더하여 인자로 넘긴다.
+                    });
 
                     childSync.next();
 
@@ -112,13 +112,13 @@
                 setTimeout(function () {
                     console.log("나는 나중", syncNext._asyncCount);
 
-                    var childSync = new Sync();
+                    const childSync = new Sync();
 
                     childSync.add(function () {
                         setTimeout(function () { // 내 자식이 먼저
                             console.log("나중 자식이 먼저", syncNext._asyncCount);
 
-                            var grandChidSync = new Sync();
+                            const grandChidSync = new Sync();
 
                             grandChidSync.add(function () {
                                 setTimeout(function () {
@@ -127,7 +127,7 @@
 
                                 }, 1000);
                                 return true; // 다음 실행될 함수와 동시에 실행된다.
-                            }); // 부모함수 안에 존재ㅎ면 child값을인자로 넘긴다.
+                            });
 
                             grandChidSync.next();
 
