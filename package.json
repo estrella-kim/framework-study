@@ -1,12 +1,10 @@
 {
   "name": "framework-study",
   "version": "1.0.0",
-  "description": "for react framework",
+  "description": "for testing module",
   "main": "index.js",
   "scripts": {
-    "dev" : "webpack --mode development",
-    "dev-server" : "webpack-dev-server",
-    "build" : "webpack --mode production"
+
   },
   "repository": {
     "type": "git",
