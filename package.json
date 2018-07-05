@@ -4,7 +4,9 @@
   "description": "for testing module",
   "main": "index.js",
   "scripts": {
-
+    "start": "node ./app.js ",
+    "dev": "webpack --mode development --watch & nodemon ./app.js ",
+    "dev-server": "webpack-dev-server --watch --open --hot"
   },
   "repository": {
     "type": "git",
@@ -31,8 +33,7 @@
     "webpack-dev-server": "^3.1.0"
   },
   "dependencies": {
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "moment": "^2.22.2",
     "style-loader": "^0.20.2"
   }
 }

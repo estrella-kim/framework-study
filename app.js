@@ -10,7 +10,7 @@ http.createServer( function (request, response) {
 
     // 파일 이름이 비어있다면 index.html 로 설정
     if(pathname=="/"){
-        pathname = "/index.html";
+        pathname = "/public/index.html";
     }
 
     // 파일을 읽기
