@@ -10,6 +10,73 @@
 </head>
 <body>
 <div id="app"></div>
-<script src="./pureFunc.js"></script>
+<script>
+    var clone = function(obj2) { //객체인지 확인하는 절차도거쳐야한다.
+        var copyObject = {};
+
+        if(obj2.constructor.name == "Object" && obj2.constructor.name == "Array"  ){
+            for (var key in obj2) {
+                copyObject[key] = obj2[key]
+            }
+        }
+        return copyObject;
+    }
+
+    var _copy = function(obj) {
+;
+        var deepcopy = function(obj) {
+            var copyObject = {};
+            if (typeof obj === "object" && obj.constructor.name !== "Array") {
+                for (var key in obj) {
+                    if (typeof obj[key] === "object" && key.constructor.name !== "Array") {
+                        copyObject[key] = deepcopy(obj[key])
+                    }else{
+                        copyObject[key] = obj[key]
+                    }
+                }
+                return copyObject;
+            }
+        }
+        var target = deepcopy(obj);
+        return target;
+    }
+
+
+        //프로그램이 함수가 종료되면 프로그램이 종료된다.
+        // C 언어에서는 MAIN함수가있다. 함수시작 메시지바? 브라우저 첫로딩 메인함수 실행 .
+        //콜스택
+        //스택에서 팝하는게 메모리에서 성능적으로 훠어어얼배 더 좋다.
+        //객체 구조 나와있음.
+
+    var oa = {
+        a:1,
+        b:2,
+        c: {
+            ca:11,
+            cb:12,
+            cc:{
+                da:111,
+                db:112
+            },
+            cd:{
+                da:211,
+                db:222
+            }
+        }
+    }
+
+    var test = {
+        a : 'here'
+    }
+
+    var foo = _copy(oa);
+    foo.c.cc.da ="jiyoung";
+    console.log(foo);
+    console.log(oa.c.cc.da)
+
+
+
+
+</script>
 </body>
 </html>
