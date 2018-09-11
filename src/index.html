@@ -1,0 +1,41 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<script>
+    const testObject = {
+        a1 : {
+            name : "elva",
+            a2 : {
+                 name : "paul"
+            },
+            b2 : {
+                a3 : {
+                    d4: {
+                        f5 : {
+                            name : "jhon"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    const copiedObject = {...testObject};
+    testObject.a1.name="paul"
+    testObject.a1.a2.name="john"
+    testObject.a1.b2.a3.d4.f5.name = "lilly"
+    testObject.name = "hu"
+    console.log(copiedObject, testObject );
+    var copyObject = function(obj){
+        Object.assign(obj);
+
+    }
+</script>
+</body>
+</html>
