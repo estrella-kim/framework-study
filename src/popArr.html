@@ -1,0 +1,36 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    var arr = ['arr', 'df', 'cd'];
+
+    var _pop = function(arg) {
+        var result = [];
+        var num = 1;
+        var _length = (function(){
+            for(var i in arg ) {
+            }
+            return i;
+        })();
+
+        function pop() {
+            if(_length - num >= 0) {
+                result[_length - num] = arg[_length - num];
+                num = num+1;
+                pop();
+            }
+            return result;
+        }
+
+        return pop();
+    }
+    console.log(_pop(arr));
+</script>
+</body>
+</html>
