@@ -28,7 +28,7 @@
         ampm : (clockTime.hours >= 12 ) ? "PM" : "AM"
     })
 
-    cnost display = target => time => target(time)
+    const display = target => time => target(time)
 
     const formatClock = format =>
         time =>
@@ -44,7 +44,12 @@
 
     const convertToCivilianTime = clockTime => compose( appendAMPM, civilianHours)(clockTime)
 
-    const doubleDigits = civilianTime => compose(prependZero("hours"), )
+    const doubleDigits = civilianTime => compose(
+        prependZero("hours"),
+        prependZero("minutes"),
+        prependZero("seconds"),
+        formatClock
+    )
 
 </script>
 </body>
