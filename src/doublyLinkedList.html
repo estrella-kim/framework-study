@@ -1,0 +1,92 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Doubly Linked List</title>
+</head>
+<body>
+<script>
+    function _node (value, prevPointer, nextPointer) {
+        return {
+            value : value,
+            prev : prevPointer,
+            next : nextPointer
+        }
+    }
+    var node = {
+        value : '',
+        prev : '',
+        next : ''
+    }
+
+    var firstNode = _node()
+    var lastNode =  _node()
+    var list = {
+        firstNode : list[a],
+        a : {
+            prev : 'b',
+            next : 'c'
+        },
+        b : {
+            prev : 'c',
+            next : 'd'
+        }
+    };
+
+    var print = function(node){
+         console.log(node.value);
+         print(list[node.next])
+    }
+
+    var DoublyList = function(maxSize){
+        this.maxSize = maxSize;
+        var list = {},
+            firstNode  = {},
+            lastNode = {};
+
+        var  clone = function(Obj){
+            return Object.assign(Obj)
+        }
+        var length = function(){
+            return Object.keys(list).length;
+        }
+        var findDirection = function(index){
+            var middle = Math.floor(length/2);
+            if(index >= middle) {
+                return list['lastChild'] //'prev'
+            }
+            return list['firstChild']//'next'
+        }
+        this.add = function(value, index){
+            if(length == 0) { // 처음으로 리스트에 넣을 때
+                list['firstNode'] = {value : value}
+                list['lastNode'] = clone(list['firstNode'])
+                return;
+            }
+            if(index === undefined || index === (length - 1)) { // 리스트 뒤로 넣을 때
+                var lastNode = clone(list['lastNode']);
+                list['lastNode'] = { value : value, prev : lastNode.value};
+                list[lastNode.value] = { value : lastNode.value, next : lastNode.value }
+                if(!!lastNode.prev) {
+                    list['prev'] = lastNode.prev;
+                }
+                return;
+            }
+        }
+        this.find = function(index){
+            var findNum = 0;
+            switch(index) {
+                case (length-1) :
+                     return list[lastNode].value
+                case 0 :
+                    return list[firstNode].value
+                default :
+                    findDirection(index)
+            }
+        }
+    }
+</script>
+</body>
+</html>
