@@ -23,70 +23,115 @@
 
     var firstNode = _node()
     var lastNode =  _node()
-    var list = {
-        firstNode : list[a],
-        a : {
-            prev : 'b',
-            next : 'c'
-        },
-        b : {
-            prev : 'c',
-            next : 'd'
-        }
-    };
-
-    var print = function(node){
-         console.log(node.value);
-         print(list[node.next])
-    }
 
     var DoublyList = function(maxSize){
         this.maxSize = maxSize;
-        var list = {},
-            firstNode  = {},
+
+        this.list = {};
+        var list = this.list;
+        var firstNode  = {},
             lastNode = {};
 
-        var  clone = function(Obj){
-            return Object.assign(Obj)
+
+        var clone = function(targetObj) {
+            if(typeof targetObj === "object" && targetObj.constructor.name !== "Array") {
+                var resultObj = {};
+
+                for(var i in targetObj) {
+                    if(typeof targetObj[i] === "object" && targetObj[i].constructor.name !== "Array") {
+                        resultObj[i] = copyObject(targetObj[i]);
+                    }
+                    resultObj[i] = targetObj[i];
+                }
+                return resultObj;
+            }
         }
-        var length = function(){
-            return Object.keys(list).length;
+
+
+
+
+        var length = function(target) {
+            if(!target) return 0;
+            return Object.keys(target).length;
         }
         var findDirection = function(index){
-            var middle = Math.floor(length/2);
+            var middle = Math.floor(length(this.list)/2);
             if(index >= middle) {
-                return list['lastChild'] //'prev'
+                return 'prev'
             }
-            return list['firstChild']//'next'
+            return 'next'
+        }
+        var getValue = function(key){
+            return list[key]
+        }
+
+        var cautionFullConditions = function(value, index) {
+            if(length(this.list) == this.maxSize) {
+                return false;
+            }
         }
         this.add = function(value, index){
-            if(length == 0) { // 처음으로 리스트에 넣을 때
-                list['firstNode'] = {value : value}
-                list['lastNode'] = clone(list['firstNode'])
+            var currentNum = 0; // 현재 세고 있는 index
+
+            if(length(this.list) == 0 && (index === undefined)) { // 처음으로 리스트에 넣을 때
+                this.list[value] = { value : value};
+                firstNode = clone(this.list[value]);
+                lastNode = firstNode;
                 return;
             }
-            if(index === undefined || index === (length - 1)) { // 리스트 뒤로 넣을 때
-                var lastNode = clone(list['lastNode']);
-                list['lastNode'] = { value : value, prev : lastNode.value};
-                list[lastNode.value] = { value : lastNode.value, next : lastNode.value }
-                if(!!lastNode.prev) {
-                    list['prev'] = lastNode.prev;
-                }
+            if(index === undefined || index === length(this.list)) { // 리스트 뒤로 넣을 때
+                this.list[value] = { value : value, prev : lastNode.value};
+                this.list[lastNode.value] = { value : lastNode.value, next : value }
+                lastNode = this.list[value];
                 return;
+            }
+            switch(findDirection(index)) {
+                case 'prev' :
+                    var key;
+                    var currentIndex = length(this.list) - 1;
+
+                    for(var i=0 ; i < currentIndex - index + 1; i ++) {
+                        key = getValue(lastNode.prev)
+                        return key && getValue(key)
+                    }
+                    break;
+                case 'next' :
+                    currentNum = 0;
+                    for(var j=0; j < index; i ++) {
+                        var key = getValue(firstNode)
+                        getValue(key)
+                    }
+                    break;
+            }
+        };
+
+
+        this.print = function(){
+            for(var i in this.list)  {
+                console.log(this.list[i])
             }
         }
+
+
         this.find = function(index){
             var findNum = 0;
             switch(index) {
-                case (length-1) :
-                     return list[lastNode].value
+                case (length(this.list)()-1) :
+                     return this.list[lastNode]
                 case 0 :
-                    return list[firstNode].value
+                    return this.list['firstNode'].value
                 default :
                     findDirection(index)
             }
         }
     }
+
+    var lists = new DoublyList(10);
+
+    lists.add('a');
+    lists.add('b');
+    lists.add('dd', 1);
+    lists.print();
 </script>
 </body>
 </html>
