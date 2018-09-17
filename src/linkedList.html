@@ -1,0 +1,62 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    var head = {
+        data : 'value',
+        next : undefined
+    }
+    var a =
+    var b = {
+        data : 'value3',
+        next : undefined
+    }
+    var c = {
+        data : 'value4',
+        next : undefined
+    })
+    var currentNode = head; // 추가 삭제가 쉽다. 링크만 변경시켜주면 되니까. 시작위치는 알아야한다. 객체는 주소가 복사된다.
+    addNode(currentNode,{
+        data : 'value2',
+        next : undefined
+    }}
+
+    head.next = a;
+    a.next = b;
+    b.next = c;
+
+    var b2 = {
+        data : 21,
+        next : undefined
+    }
+
+   // b.next  = b2;
+    //b2.next = c; 댓츠노노
+
+
+    b2.next = b.next;
+    b.next = b2;
+
+    var addNode = function(t, n) {
+        n.next = t.next;
+        t.next = n;
+    }
+
+    b.next = b2.next;
+    var removeNode  = function(t, prev){
+        prev.next = t.next;
+    }
+
+    //객체가 만들어진 다음에 되어야한다.
+    console.log(head)
+ //싱글링크드리스트 -> 더블링크드리스트 -> 스택
+
+</script>
+</body>
+</html>

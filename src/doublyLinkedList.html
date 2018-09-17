@@ -60,7 +60,7 @@
                 return 'prev'
             }
             return 'next'
-        }
+        };
         var getValue = function(key){
             return list[key]
         }
@@ -92,7 +92,7 @@
 
                     for(var i=0 ; i < currentIndex - index + 1; i ++) {
                         key = getValue(lastNode.prev)
-                        return key && getValue(key)
+                        return key && getValue(key) // 배열은 추가할 때 메모리를 복사한다. (메모리를 차지한다.)
                     }
                     break;
                 case 'next' :
@@ -126,6 +126,7 @@
         }
     }
 
+    //큐, 스택, 리스트, 맵, 트리
     var lists = new DoublyList(10);
 
     lists.add('a');

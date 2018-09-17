@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="format-detection" content="telephone=no">`
+    <title>React</title>
+    m
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+
+<body>
+<script>
+    (function () {
+        var SingleLinkedList = function () {
+            var head;
+            var tail;
+
+            this.getNode = function(index) {
+                var current = head;
+                ++index;
+
+                while(--index) {
+                    current = current.next;
+                }
+
+                return current;
+            };
+
+            this.getHead = function () {
+                return head;
+            };
+
+            this.getTail = function () {
+                return tail;
+            };
+
+            this.addNode = function (n, t) {
+                if (tail) {
+                    if (t) {
+                        n.next = t.next;
+                        t.next = n;
+                    } else {
+                        tail.next = n;
+                        tail = n;
+                    }
+                } else {
+                    head = tail = n;
+                }
+
+                return n;
+            };
+
+            this.clear = function () {
+                head = undefined;
+                tail = undefined;
+            };
+
+            this.removeNode = function (n) {
+                if (n === head) { //head를 먼저 처리
+                    if (head.next) {
+                        head = head.next;
+                    } else {
+                        this.clear();
+                    }
+                } else {
+                    var c = head;
+                    var t;
+
+                    while (c) {
+                        if (c.next === n) {
+                            t=c;
+                            break;
+                        } else {
+                            c = c.next;
+                        }
+                    }
+
+                    if(t) {
+                        if(n.next) {
+                            t.next = n.next;
+                        } else { //n이 tail일 경우 처리
+                            t.next = undefined;
+                            tail = t;
+                        }
+                    }
+                }
+            };
+        };
+
+        var s = new SingleLinkedList();
+        s.addNode({
+            data: 1,
+            next: undefined
+        });
+
+        s.addNode({
+            data: 2,
+            next: undefined
+        });
+
+        s.addNode({
+            data: 3,
+            next: undefined
+        });
+
+        s.addNode({
+            data: 21,
+            next: undefined
+        }, s.getNode(1));
+
+        console.log(s.getHead());
+    })();
+</script>
+</body>
+
+</html>
