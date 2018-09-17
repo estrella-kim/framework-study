@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="format-detection" content="telephone=no">
+    <title>React</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+
+<body>
+<script>
+    (function () {
+        var Stack = function (pSize) {
+            var stack = [];
+            var count = 0;
+            var maxSize = pSize || 10;
+
+            this.push = function (pData) {
+                if (count < maxSize) {
+                    stack[count++] = pData;
+
+                    return {
+                        data: pData,
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "스택 만땅"
+                    };
+                }
+            };
+
+            this.pop = function () {
+                if (count > 0) {
+                    return {
+                        data: stack[--count],
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "스택 비었음"
+                    };
+                }
+            };
+
+            this.clear = function () {
+                stack = [];
+                count = 0;
+            };
+        };
+        var Queue = function (pSize) {
+            var queue = [];
+            var count = 0;
+            var front = 0;
+            var rear = 0;
+            var maxSize = pSize || 10;
+
+            this.print =function() {
+                console.log(front, rear, count);
+                console.log(queue);
+            };
+
+            this.push = function (pData) {
+                if (count < maxSize) {
+                    queue[rear++] = pData;
+                    rear = rear % maxSize;
+                    ++count;
+
+                    return {
+                        data: pData,
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "큐가 꽉 찼음"
+                    };
+                }
+            };
+
+            this.pop = function () {
+                if (count > 0) {
+                    --count;
+
+                    var data  = {
+                        data: queue[front++],
+                        msg: "success"
+                    };
+
+                    front = front % maxSize;
+
+                    return data;
+                } else {
+                    return {
+                        data: null,
+                        msg: "큐가 비었음"
+                    };
+                }
+            };
+
+            this.clear = function () {
+                queue = [];
+                count = 0;
+                front = 0;
+                rear = 0;
+            };
+        }
+        var s = new Stack(10);
+
+        console.log("##################");
+        console.log(s.push(1));
+        console.log(s.push(2));
+        console.log(s.pop());
+        console.log(s.push(3));
+        console.log(s.pop());
+        console.log(s.pop());
+
+        var q = new Queue(10);
+
+        console.log("##################");
+        q.push(1);q.print();
+        q.push(2);q.print();
+        q.pop();q.print();
+        q.push(3);q.print();
+        q.pop();q.print();
+        q.pop();q.print();
+
+        //루프를 돌면서 특정 범위를 반복 시킬대 나머지 연산을 사용
+        var a=[0,1,2,3,4,5,6,7,8,9,10];
+        var b=["동", "서", "남", "북"];
+
+        for(var i in a) {
+            var loopi = i % 4;
+            console.log(b[loopi]);
+        }
+    })();
+</script>
+</body>
+
+</html>
