@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>더블링크드리스트</title>
+</head>
+<body>
+<script>
+
+    var doublyLinkedList = function() {
+
+        var length = 0,
+            head,
+            tail;
+
+        var copyObject = function(targetObj) {
+            if(typeof targetObj === "object" && targetObj.constructor.name !== "Array") {
+                var resultObj = {};
+
+                for(var i in targetObj) {
+                    if(typeof targetObj[i] === "object" && targetObj[i].constructor.name !== "Array") {
+                        resultObj[i] = copyObject(targetObj[i]);
+                    }
+                    resultObj[i] = targetObj[i];
+                }
+                return resultObj;
+            }
+        }
+
+        this.add  = function(object, node) { //넣기 node : 위치, object : 추가하고 싶은 노드)
+            if(head) {
+                  if(!node) {
+                      tail['next'] = object;
+                      object['prev'] = tail;
+                      tail = object;
+                  }else{
+                      node['next']['prev'] = object;
+                      object['next'] = node['next'];
+                      node['next'] = object;
+                      object['prev'] = node;
+                  }
+                  //node['next']['prev'] = node;
+            } else{
+                head = tail = object;
+            }
+            length++;
+        }
+
+          this.remove = function (node) { //노드 삭제하기
+
+            if(head === tail) {
+              head = tail = undefined;
+            }else if(!node) {
+                tail['prev']['next'] = undefined;
+                tail = tail['prev']
+            }else{
+                node['next']['prev'] = node['prev'];
+                node['prev']['next'] = node['next'];
+            }
+            length--;
+        }
+
+        this._length = function(){
+            return length;
+        }
+
+        this.find = function (index) {//중간부터 검색하기
+            var currentNode;
+
+            if (index <= (length / 2)) {
+                currentNode = getHead();
+                while (index--) {
+                    currentNode = currentNode['next']; //head에서
+                }
+                return currentNode;
+            } else {
+                currentNode = getTail();
+
+                while (index--) {
+                    currentNode['prev'] = currentNode; //tail에서
+                }
+            }
+            return currentNode;
+        }
+
+        this.print = function(){
+            if(!tail) {
+                showIfEmpty();
+            }else{
+                console.log(tail);
+            }
+        }
+
+
+        function getHead() {
+            return head;
+        }
+
+        function showIfEmpty () {
+            console.log('리스트가 비었습니다.')
+        }
+
+        function getTail() {
+            return tail;
+        }
+
+    }
+</script>
+<script>
+    var s = new doublyLinkedList();
+    s.add({
+        prev : undefined,
+        value : "10",
+        next : undefined
+    });
+    s.remove();
+    s.print();
+    s.add({
+        prev : undefined,
+        value : "10",
+        next : undefined
+    });
+    s.print();
+</script>
+</body>
+</html>
