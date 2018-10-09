@@ -13,22 +13,8 @@
             head,
             tail;
 
-        var copyObject = function(targetObj) {
-            if(typeof targetObj === "object" && targetObj.constructor.name !== "Array") {
-                var resultObj = {};
-
-                for(var i in targetObj) {
-                    if(typeof targetObj[i] === "object" && targetObj[i].constructor.name !== "Array") {
-                        resultObj[i] = copyObject(targetObj[i]);
-                    }
-                    resultObj[i] = targetObj[i];
-                }
-                return resultObj;
-            }
-        }
-
         this.add  = function(object, node) { //넣기 node : 위치, object : 추가하고 싶은 노드)
-            if(head) {
+            if(object) { //ㄷㅓ하려면 head가 당연히 있다.  용도에 맞는 tail을 체크해주어야한다.
                   if(!node) {
                       tail['next'] = object;
                       object['prev'] = tail;
@@ -48,16 +34,24 @@
 
           this.remove = function (node) { //노드 삭제하기
 
-            if(head === tail) {
-              head = tail = undefined;
-            }else if(!node) {
-                tail['prev']['next'] = undefined;
-                tail = tail['prev']
-            }else{
-                node['next']['prev'] = node['prev'];
-                node['prev']['next'] = node['next'];
-            }
-            length--;
+
+              if (head === tail) {
+                  head = tail = undefined;
+              } else if (!node) {
+                  tail['prev']['next'] = undefined;
+                  tail = tail['prev']
+              } else {
+                  //만약 node 가 테일일경우에 대해서 예외처리가 필요함.
+                  node['next']['prev'] = node['prev'];
+                  node['prev']['next'] = node['next'];
+              }
+              length--;
+
+              //if(node.next) {
+           //}
+              //if(node.prev) {
+              //빈값 체크
+
         }
 
         this._length = function(){

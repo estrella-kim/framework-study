@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+<script>
+        var DoubleLinkedList = function(){
+            var head,
+                tail,
+                count = 0;
+
+
+
+            this.get = function(pIndex){
+                if(0 < count && pIndex < count) {
+                    var currentNode,
+                        i;
+
+                    if(pIndex <= count/2) {
+                        console.log("head");
+                        for (i = 0, currentNode = head; i < pIndex; ++i) {
+                            currentNode = currentNode.next;
+                        }
+                    }else{
+                        console.log('tail');
+                        for(i=count-1, currentNode = tail; pIndex < i;--i) {
+                            currentNode = currentNode.prev;
+                        }
+                    }
+                    return currentNode;
+                }
+                return undefined;
+            };
+
+            this.add = function(newNode, target){ //타입체크해주기
+                //특정위치에 넣기
+                if(newNode instanceof DoubleLinkedList.Node) {  // 변화됳 수 없도록.
+                    if(typeof target === "number") { //index가 넘버라면
+                        target = this.get(target);
+                    }
+
+                    if(target instanceof DoubleLinkedList.Node) {
+                        // 분기문을 만들 때 빈도수를 생각해야한다.
+
+                        target['next'] = newNode;
+                        newNode['prev'] = target;
+
+                        if(target['next']) { //tail이 아니면
+                            target['next']['prev'] = newNode;
+                        }
+
+                        newNode['next'] = target['next']; //내것인지 확인
+
+                        if(target == tail) {//target이 tail 이 면
+                            tail = newNode;
+                        }
+                    } else {// target이 없으면 tail붙인다. 조건을 걸때는 정확히 찾는걸 해야한다.(정확한 케이스가 더 중요 > 빈도보다)
+                        if(tail) {
+                            tail.next = newNode;
+                            newNode.prev = tail;
+                            tail = newNode;
+                        }else {
+                            head = tail = newNode;
+                            newNode.prev = undefined;
+                        }
+                        newNode.next = undefined;
+                    }
+                    return newNode;
+                }
+                return undefined; //사용자는 리턴값이 필요할 수 있기 때문에
+            };
+
+        }
+
+
+        //after, before
+        //after 앵커 뒤로
+        //before 앵커 앞으로, 헤더앞으로
+
+        DoubleLinkedList.prototype.remove = function(){
+
+        };
+
+        DoubleLinkedList.prototype.Node = function(nodeData){ // 자신의 형태를 잡아준다. 형태가 어떻게 들어오는지 모르기때문이다.
+            this.prev = undefined;
+            this.next = undefined;
+            this.data = nodeData;
+        };
+
+    window.DoubleLinkedList = DoubleLinkedList; // window 메소드로 등록하는 이유는, 해당 메소드가 겹쳐지거나 손상이 되지 않도록 만들기 위해서이다.
+
+    var foo = new DoubleLinkedList();
+
+
+    d.add(new DoubleLinkedList.Node(10), 3)
+    d.add(new DoubleLinkedList.Node(20), 3)
+    d.add(new DoubleLinkedList.Node(30), 3)
+    d.add(new DoubleLinkedList.Node(40), 3)
+    d.add(new DoubleLinkedList.Node(50), 3)
+
+
+    //트리만들어오기 left로 들어가라, right로 들어가라, parent 세 개의 노드
+    //find는 하지말고,
+    //추가,제거!
+
+</script>
+</body>
+</html>

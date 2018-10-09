@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>tree structure</title>
+</head>
+<body>
+<script>
+
+    var Tree = function(){
+        var root;
+        var count;
+
+        this.add = function(childNode, side, target) {
+
+            if(childNode && (side==='left' || side === 'right') ){
+
+                var current;
+                if(target) {
+                    if(target instanceof Tree.prototype.Node){ // 타겟이 node 형식일 때
+
+                    }else{ // target이 정의되지 않았을 때
+                        return undefined;
+                    }
+
+                }else{
+                    if(root) {
+                        current = root;
+                    }else{//root가 없을 때
+                        root = childNode;
+                        return childNode;
+                    }
+                }
+                //////
+                while(current.children[side]) {
+                    current = current.children[side];
+                }
+
+                current.children[side] = childNode;
+                childNode.parent = current;
+                count++;
+
+                return childNode;
+            }
+            return undefined;
+        }
+
+        this.remove = function(targetNode) {
+            if(targetNode) {
+                if(targetNode.parent) { // rootNode 가 아니라면
+                    switch(targetNode) {
+                        case (targetNode.parent.children.left) :
+                            targetNode.parent.children.left = undefined;
+                            break;
+                        case (targetNode.parent.children.right) :
+                            targetNode.parent.children.right = undefined;
+                            break;
+                        default :
+                            return undefined;
+                    }
+                    targetNode.parent = undefined;
+                } else{  // rootnode라면
+                    targetNode = rootNode = undefined;
+                }
+                return targetNode;
+            }
+            return undefined;
+        }
+
+        this.get = function(tIndex, side) {//우선 number만
+            var count = 0;
+
+            if(tIndex instanceof Number) {
+                for(var i = 0;i < tIndex; )
+            }
+        }
+
+        this.print = function(){
+            console.dir(root);
+        }
+    }
+
+    Tree.prototype.Node = function(Tdata){
+        this.parent = undefined;
+        this.value  = Tdata;
+        this.children = {
+            left : undefined,
+            right : undefined
+        };
+    }
+
+
+    var t = new Tree();
+
+    window.t = t;
+
+    t.add(new Tree.prototype.Node(10), 'left');
+    t.add(new Tree.prototype.Node(20), 'right');
+    t.add(new Tree.prototype.Node(20), 'left');
+    t.add(new Tree.prototype.Node(30), 'left');
+    t.print();
+</script>
+</body>
+</html>
