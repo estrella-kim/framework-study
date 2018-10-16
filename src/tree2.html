@@ -11,7 +11,7 @@
 
 <body>
 <script>
-    (function () {
+    (function() {
         var Stack = function (pSize) {
             var stack = [];
             var count = 0;
@@ -109,7 +109,11 @@
                 rear = 0;
             };
         }
+        window.Stack = Stack;
+        window.Queue = Queue;
+    })();
 
+    (function () {
         var BinaryTree = (function() {
             var binaryTree = function() {
                 var root;
@@ -134,28 +138,58 @@
                     return pNewNode;
                 };
 
-                this.findWidth = function(pData) {//넓이우선
+                this.findWidth=function(pData) {
+                    var q = new Queue(1000);
 
-                    var q = new Queue(3);
-                    q.push(this.getRoot());
-                    var a = q.pop();
+                    q.push(root);
+                    var c = q.pop().data;
 
-                    do {
-                        if(a.left || a.right) {
-                            a = q.pop();
+                    while(c) {
+                        console.log(c.data, pData);
+                        if(c.data===pData) {
+                            return c;
+                        } else {
+                            if(c.left) {
+                                q.push(c.left);
+                            }
 
-                        }else{
-                            q.push(a.left);
-                            q.push(a.right);
-                            a = q.pop();
-
+                            if(c.right) {
+                                q.push(c.right);
+                            }
                         }
-                        a = q.pop();
+
+                        c = q.pop().data;
                     }
-                    while(a === pData) {
-                        return pData;
+
+                    return undefined;
+                };
+
+                this.findDepth=function(pData) {
+                    var q = new Stack(1000);
+
+                    q.push(root);
+                    var c = q.pop().data;
+
+                    while(c) {
+                        console.log(c.data, pData);
+
+                        if(c.data===pData) {
+                            return c;
+                        } else {
+                            if(c.right) {
+                                q.push(c.right);
+                            }
+
+                            if(c.left) {
+                                q.push(c.left);
+                            }
+                        }
+
+                        c = q.pop().data;
                     }
-                }
+
+                    return undefined;
+                };
             };
 
             var binaryTreeNode = function(pData) {
@@ -167,30 +201,30 @@
 
             binaryTree.Node = binaryTreeNode;
 
-
-
-
             return binaryTree;
         })();
 
         window.BinaryTree = BinaryTree;
 
         var t = new BinaryTree();
-        t.add(new BinaryTree.Node(1));
-        var root = t.add(new BinaryTree.Node(2), 'left', t.getRoot());
+        var c = t.add(new BinaryTree.Node(1));
+        var l, r;
+
+        l = t.add(new BinaryTree.Node(3), "left", c);
+        r = t.add(new BinaryTree.Node(6), "right", c);
+
+        c=l;
+        t.add(new BinaryTree.Node(2), "left", c);
+        t.add(new BinaryTree.Node(4), "right", c);
+
+        c=r;
+        t.add(new BinaryTree.Node(5), "left", c);
+        t.add(new BinaryTree.Node(7), "right", c);
 
 
         window.t = t;
-        console.log(t.findWidth(t.getRoot()));
-
-        //왼쪽부터
     })();
-
-    //삭제를 만들어오기
-    //트리구조 만드는게 중요. 트리
-    //다음주는 바이너리 서치트리
- ///다음다음 밸런스트리
-    //binary tree/ binary search tree
 </script>
 </body>
+
 </html>
