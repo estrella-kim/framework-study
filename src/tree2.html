@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="format-detection" content="telephone=no">
+    <title>React</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+
+<body>
+<script>
+    (function () {
+        var Stack = function (pSize) {
+            var stack = [];
+            var count = 0;
+            var maxSize = pSize || 10;
+
+            this.push = function (pData) {
+                if (count < maxSize) {
+                    stack[count++] = pData;
+
+                    return {
+                        data: pData,
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "스택 만땅"
+                    };
+                }
+            };
+
+            this.pop = function () {
+                if (count > 0) {
+                    return {
+                        data: stack[--count],
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "스택 비었음"
+                    };
+                }
+            };
+
+            this.clear = function () {
+                stack = [];
+                count = 0;
+            };
+        };
+        var Queue = function (pSize) {
+            var queue = [];
+            var count = 0;
+            var front = 0;
+            var rear = 0;
+            var maxSize = pSize || 10;
+
+            this.print =function() {
+                console.log(front, rear, count);
+                console.log(queue);
+            };
+
+            this.push = function (pData) {
+                if (count < maxSize) {
+                    queue[rear++] = pData;
+                    rear = rear % maxSize;
+                    ++count;
+
+                    return {
+                        data: pData,
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "큐가 꽉 찼음"
+                    };
+                }
+            };
+
+            this.pop = function () {
+                if (count > 0) {
+                    --count;
+
+                    var data  = {
+                        data: queue[front++],
+                        msg: "success"
+                    };
+
+                    front = front % maxSize;
+
+                    return data;
+                } else {
+                    return {
+                        data: null,
+                        msg: "큐가 비었음"
+                    };
+                }
+            };
+
+            this.clear = function () {
+                queue = [];
+                count = 0;
+                front = 0;
+                rear = 0;
+            };
+        }
+
+        var BinaryTree = (function() {
+            var binaryTree = function() {
+                var root;
+
+                this.getRoot = function() {
+                    return root;
+                };
+
+                this.add=function(pNewNode, pType, pParentNode) {
+                    if(pNewNode) {
+                        if(pParentNode) {
+                            pParentNode[pType] = pNewNode;
+                            pNewNode.parent = pParentNode;
+                        } else {
+                            root = pNewNode;
+                            pNewNode.parent=undefined;
+                        }
+                    } else {
+                        pNewNode = undefined;
+                    }
+
+                    return pNewNode;
+                };
+
+                this.findWidth = function(pData) {//넓이우선
+
+                    var q = new Queue(3);
+                    q.push(this.getRoot());
+                    var a = q.pop();
+
+                    do {
+                        if(a.left || a.right) {
+                            a = q.pop();
+
+                        }else{
+                            q.push(a.left);
+                            q.push(a.right);
+                            a = q.pop();
+
+                        }
+                        a = q.pop();
+                    }
+                    while(a === pData) {
+                        return pData;
+                    }
+                }
+            };
+
+            var binaryTreeNode = function(pData) {
+                this.parent = undefined;
+                this.left = undefined;
+                this.right = undefined;
+                this.data = pData;
+            }
+
+            binaryTree.Node = binaryTreeNode;
+
+
+
+
+            return binaryTree;
+        })();
+
+        window.BinaryTree = BinaryTree;
+
+        var t = new BinaryTree();
+        t.add(new BinaryTree.Node(1));
+        var root = t.add(new BinaryTree.Node(2), 'left', t.getRoot());
+
+
+        window.t = t;
+        console.log(t.findWidth(t.getRoot()));
+
+        //왼쪽부터
+    })();
+
+    //삭제를 만들어오기
+    //트리구조 만드는게 중요. 트리
+    //다음주는 바이너리 서치트리
+ ///다음다음 밸런스트리
+    //binary tree/ binary search tree
+</script>
+</body>
+</html>

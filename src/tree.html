@@ -18,7 +18,7 @@
                 var current;
                 if(target) {
                     if(target instanceof Tree.prototype.Node){ // 타겟이 node 형식일 때
-
+                        target[side] =  target;
                     }else{ // target이 정의되지 않았을 때
                         return undefined;
                     }
