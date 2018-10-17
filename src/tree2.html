@@ -12,6 +12,7 @@
 <body>
 <script>
     (function() {
+
         var Stack = function (pSize) {
             var stack = [];
             var count = 0;
@@ -171,7 +172,6 @@
                     var c = q.pop().data;
 
                     while(c) {
-                        console.log(c.data, pData);
 
                         if(c.data===pData) {
                             return c;
@@ -190,6 +190,37 @@
 
                     return undefined;
                 };
+
+                this.remove = function(pData) {
+                    var pNode = this.findDepth(pData);
+                    var current = pNode;
+
+                    if(pNode) {
+                        while(current.left !== undefined || current.right !== undefined) {
+
+                            if(current.left) {
+                                current.data = current['left'].data;
+                                current = current['left'];
+                            }else if(current.right) {
+                                current.data = current['right'].data;
+                                current = current['right'];
+                            }
+                        }
+                        if(root === current) {
+                            root = undefined;
+                            return current;
+                         }
+                        if(current.parent.left && (current.parent.left.data === current.data) ){
+                            current.parent.left = undefined;
+                        }
+                        if(current.parent.right && (current.parent.right.data === current.data) ){
+                            current.parent.right = undefined;
+                        }
+                        return pNode;
+                    }else {
+                        return undefined;
+                    }
+                }
             };
 
             var binaryTreeNode = function(pData) {
@@ -220,7 +251,6 @@
         c=r;
         t.add(new BinaryTree.Node(5), "left", c);
         t.add(new BinaryTree.Node(7), "right", c);
-
 
         window.t = t;
     })();
