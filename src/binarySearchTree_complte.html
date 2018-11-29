@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="format-detection" content="telephone=no">
+    <title>React</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+</head>
+
+<body>
+<script>
+    (function () {
+        var Stack = function (pSize) {
+            var stack = [];
+            var count = 0;
+            var maxSize = pSize || 10;
+
+            this.push = function (pData) {
+                if (count < maxSize) {
+                    stack[count++] = pData;
+
+                    return {
+                        data: pData,
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "스택 만땅"
+                    };
+                }
+            };
+
+            this.pop = function () {
+                if (count > 0) {
+                    return {
+                        data: stack[--count],
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "스택 비었음"
+                    };
+                }
+            };
+
+            this.clear = function () {
+                stack = [];
+                count = 0;
+            };
+        };
+        var Queue = function (pSize) {
+            var queue = [];
+            var count = 0;
+            var front = 0;
+            var rear = 0;
+            var maxSize = pSize || 10;
+
+            this.print = function () {
+                console.log(front, rear, count);
+                console.log(queue);
+            };
+
+            this.push = function (pData) {
+                if (count < maxSize) {
+                    queue[rear++] = pData;
+                    rear = rear % maxSize;
+                    ++count;
+
+                    return {
+                        data: pData,
+                        msg: "success"
+                    };
+                } else {
+                    return {
+                        data: null,
+                        msg: "큐가 꽉 찼음"
+                    };
+                }
+            };
+
+            this.pop = function () {
+                if (count > 0) {
+                    --count;
+
+                    var data = {
+                        data: queue[front++],
+                        msg: "success"
+                    };
+
+                    front = front % maxSize;
+
+                    return data;
+                } else {
+                    return {
+                        data: null,
+                        msg: "큐가 비었음"
+                    };
+                }
+            };
+
+            this.clear = function () {
+                queue = [];
+                count = 0;
+                front = 0;
+                rear = 0;
+            };
+        }
+        window.Stack = Stack;
+        window.Queue = Queue;
+    })();
+    (function () {
+        var BinaryTree = (function () {
+            var binaryTree = function () {
+                var root;
+
+                this.getRoot = function () {
+                    return root;
+                };
+
+                this.add = function (pNewNode, pType, pParentNode) {
+                    if (pNewNode) {
+                        if (pParentNode) {
+                            pParentNode[pType] = pNewNode;
+                            pNewNode.parent = pParentNode;
+                        } else {
+                            root = pNewNode;
+                            pNewNode.parent = undefined;
+                        }
+                    } else {
+                        pNewNode = undefined;
+                    }
+
+                    return pNewNode;
+                };
+
+                this.remove = function (pData) {
+                    var lNode = this.findWidth(pData);
+                    var lVRoot = undefined;
+
+                    if (lNode) {
+                        if (!lNode.parent) {
+                            lVRoot = new BinaryTree.Node();
+                            lVRoot.left = root;
+                            root.parent = lVRoot;
+                        }
+
+                        var parentchild;
+
+                        if (lNode.parent.left == lNode) {
+                            parentchild = "left";
+                        } else {
+                            parentchild = "right";
+                        }
+
+                        if (lNode.left && lNode.right) {
+                            var lCurrentNode = lNode;
+
+                            while (lCurrentNode.left) {
+                                lCurrentNode = lCurrentNode.left;
+                            }
+
+                            lCurrentNode.left = lNode.right;
+                            lNode.right.parent = lCurrentNode;
+                            lNode.parent[parentchild] = lNode.left;
+                            lNode.left.parent = lNode.parent;
+                        } else {
+                            if (lNode.left) {
+                                lNode.parent[parentchild] = lNode.left;
+                                lNode.left.parent = lNode.parent;
+                            } else if (lNode.right) {
+                                lNode.parent[parentchild] = lNode.right;
+                                lNode.right.parent = lNode.parent;
+                            } else {
+                                lNode.parent[parentchild] = undefined;
+                            }
+                        }
+
+                        if (lVRoot) {
+                            root = lVRoot.left;
+                            root.parent = undefined;
+                        }
+                    }
+
+                    return lNode;
+                };
+
+                this.printWidth = function () {
+                    var q = new Queue(1000);
+
+                    q.push(root);
+                    var c;
+
+                    while (c = q.pop().data) {
+                        console.log(c.data + "[" + (c.parent && c.parent.data) + "," + (c.left && c.left.data) + "," + (c.right && c.right.data) + "]");
+
+                        if (c.left) {
+                            q.push(c.left);
+                        }
+
+                        if (c.right) {
+                            q.push(c.right);
+                        }
+                    }
+
+                    return undefined;
+                };
+
+                this.printDepth = function () {
+                    var s = new Stack(1000);
+
+                    s.push(root);
+                    var c;
+
+                    while (c = s.pop().data) {
+                        console.log(c.data + "[" + (c.parent && c.parent.data) + "," + (c.left && c.left.data) + "," + (c.right && c.right.data) + "]");
+
+                        if (c.right) {
+                            s.push(c.right);
+                        }
+
+                        if (c.left) {
+                            s.push(c.left);
+                        }
+                    }
+
+                    return undefined;
+                };
+
+                this.findWidth = function (pData) {
+                    var q = new Queue(1000);
+
+                    q.push(root);
+                    var c = q.pop().data;
+
+                    while (c) {
+                        console.log(c.data, pData);
+                        if (c.data === pData) {
+                            return c;
+                        } else {
+                            if (c.left) {
+                                q.push(c.left);
+                            }
+
+                            if (c.right) {
+                                q.push(c.right);
+                            }
+                        }
+
+                        c = q.pop().data;
+                    }
+
+                    return undefined;
+                };
+
+                this.findDepth = function (pData) {
+                    var q = new Stack(1000);
+
+                    q.push(root);
+                    var c = q.pop().data;
+
+                    while (c) {
+                        console.log(c.data, pData);
+
+                        if (c.data === pData) {
+                            return c;
+                        } else {
+                            if (c.right) {
+                                q.push(c.right);
+                            }
+
+                            if (c.left) {
+                                q.push(c.left);
+                            }
+                        }
+
+                        c = q.pop().data;
+                    }
+
+                    return undefined;
+                };
+            };
+
+            var binaryTreeNode = function (pData) {
+                this.parent = undefined;
+                this.left = undefined;
+                this.right = undefined;
+                this.data = pData;
+            }
+
+            binaryTree.Node = binaryTreeNode;
+
+            return binaryTree;
+        })();
+        window.BinaryTree = BinaryTree;
+    })();
+    (function () {
+        var BinarySearchTree = (function () {
+            var binarySearchTree = function () {
+                var root;
+                var link = function (pParentNode, pChildNode) {
+                    if (pParentNode && pChildNode && (pParentNode !== pChildNode)) {
+                        pChildNode.parent = pParentNode;
+
+                        if (pChildNode.data < pParentNode.data) {
+                            pParentNode.left = pChildNode;
+                        } else {
+                            pParentNode.right = pChildNode;
+                        }
+                    }
+                };
+
+                var unLink = function (pParentNode, pChildNode) {
+                    if (pParentNode && pChildNode && (pParentNode !== pChildNode)) {
+                        pChildNode.parent = undefined;
+
+                        if (pChildNode === pParentNode.left) {
+                            pParentNode.left = undefined;
+                        } else {
+                            pParentNode.right = undefined;
+                        }
+                    }
+                };
+
+                this.add = function (pNode) {
+                    if (root) {
+                        var lParent = { node: undefined };
+
+                        if (this.search(pNode, lParent) === undefined) {
+                            lParent = lParent.node;
+                            link(lParent, pNode);
+                        } else {
+                            return undefined;
+                        }
+                    } else {
+                        root = pNode;
+                    }
+
+                    return pNode;
+                };
+                this.remove = function (pNode) {
+                    var lTargetNode = this.search(pNode);
+                    var cur;
+
+                    if (lTargetNode) {
+                        //자식이 둘다 있는지 확인한다.
+                        if (lTargetNode.left && lTargetNode.right) {
+                            var curParent=undefined;
+                            cur = lTargetNode.left;
+
+                            while (cur.right) {
+                                curParent = cur;
+                                cur = cur.right;
+                            }
+
+                            if(curParent) {
+                                curParent.right=undefined;
+                            }
+
+                            if (cur.left) {
+                                link(cur.parent, cur.left)
+                            }
+
+                            link(lTargetNode.parent, cur);
+                            link(cur, lTargetNode.left);
+                            link(cur, lTargetNode.right);
+                        } else if (lTargetNode.left) {
+                            cur = lTargetNode.left;
+                            link(lTargetNode.parent, lTargetNode.left);
+                        } else if (lTargetNode.right) {
+                            cur = lTargetNode.right;
+                            link(lTargetNode.parent, lTargetNode.right);
+                        } else {
+                            unLink(lTargetNode.parent, lTargetNode);
+                        }
+
+                        if(lTargetNode===root) {
+                            root = cur;
+
+                            if(root) {
+                                root.parent = undefined;
+                            }
+                        }
+
+                        return lTargetNode;
+                    }
+
+                    return undefined;
+                };
+
+                this.search = function (pNode, pOutParent) {
+                    var cur = root;
+
+                    while (cur) {
+                        if (cur.data < pNode.data) {
+                            if (cur.right) {
+                                cur = cur.right;
+                            } else {
+                                pOutParent.node = cur;
+                                break;
+                            }
+                        } else if (cur.data > pNode.data) {
+                            if (cur.left) {
+                                cur = cur.left;
+                            } else {
+                                pOutParent.node = cur;
+                                break;
+                            }
+                        } else {
+                            return cur;
+                        }
+                    }
+
+                    return undefined;
+                };
+                this.printWidth = function () {
+                    var q = new Queue(1000);
+
+                    q.push(root);
+                    var c;
+
+                    while (c = q.pop().data) {
+                        console.log(c.data + "[" + (c.parent && c.parent.data) + "," + (c.left && c.left.data) + "," + (c.right && c.right.data) + "]");
+
+                        if (c.left) {
+                            q.push(c.left);
+                        }
+
+                        if (c.right) {
+                            q.push(c.right);
+                        }
+                    }
+
+                    return undefined;
+                };
+            };
+
+            return binarySearchTree;
+        })();
+
+        BinarySearchTree.Node = function (pData) {
+            this.data = pData;
+            this.parent = undefined;
+            this.left = undefined;
+            this.right = undefined;
+        };
+
+        window.BinarySearchTree = BinarySearchTree;
+
+        var t = new BinarySearchTree();
+
+        t.add(new BinarySearchTree.Node(4));
+        t.add(new BinarySearchTree.Node(8));
+        t.add(new BinarySearchTree.Node(6));
+        t.add(new BinarySearchTree.Node(10));
+        t.add(new BinarySearchTree.Node(2));
+        t.add(new BinarySearchTree.Node(1));
+        t.add(new BinarySearchTree.Node(3));
+        t.add(new BinarySearchTree.Node(5));
+        t.add(new BinarySearchTree.Node(7));
+
+        window.t=t;
+    })();
+</script>
+</body>
+
+</html>
